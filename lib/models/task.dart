@@ -33,6 +33,17 @@ abstract class Task {
     status = TaskStatus.pending;
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'type': typeLabel,
+      'id': id,
+      'title': title,
+      'priority': priority.name,
+      'deadline': deadline?.toIso8601String(),
+      'status': status.name,
+    };
+  }
+
   @override
   String toString() {
     final deadlineText =
