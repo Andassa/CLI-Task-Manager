@@ -1,0 +1,64 @@
+import 'dart:io';
+
+import 'package:cli_task_manager/models/simple_task.dart';
+import 'package:cli_task_manager/models/task_priority.dart';
+import 'package:cli_task_manager/repositories/json_task_repository.dart';
+import 'package:test/test.dart';
+
+void main() {
+  group('JsonTaskRepository', () {
+    late Directory tempDir;
+    late String filePath;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('task_manager_test');
+      filePath = '${tempDir.path}/tasks.json';
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+    test('load retourne une liste vide si le fichier n\'existe pas', () async {
+      final repository = JsonTaskRepository(filePath);
+
+      final tasks = await repository.load();
+
+      expect(tasks, isEmpty);
+    });
+
+    test('save puis load conserve les taches', () async {
+      final repository = JsonTaskRepository(filePath);
+      final task = SimpleTask(
+        id: '1',
+        title: 'Test',
+        priority: TaskPriority.high,
+      );
+
+      await repository.save([task]);
+      expect(File(filePath).existsSync(), isTrue);
+
+      final loaded = await repository.load();
+      expect(loaded, hasLength(1));
+      expect(loaded.first.id, '1');
+      expect(loaded.first.title, 'Test');
+      expect(loaded.first.priority, TaskPriority.high);
+    });
+
+    test('delete retire la tache du fichier', () async {
+      final repository = JsonTaskRepository(filePath);
+      await repository.save([
+        SimpleTask(id: '1', title: 'A', priority: TaskPriority.low),
+        SimpleTask(id: '2', title: 'B', priority: TaskPriority.low),
+      ]);
+
+      await repository.delete('1');
+
+      final loaded = await repository.load();
+      expect(loaded, hasLength(1));
+      expect(loaded.first.id, '2');
+    });
+  });
+}
