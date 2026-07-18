@@ -13,7 +13,7 @@ interfaces et tests unitaires.
 - Ajouter une tache (titre, priorite, echeance optionnelle).
 - Marquer une tache comme terminee.
 - Supprimer une tache.
-- Lister les taches avec leur statut et leur priorite.
+- Lister les taches triees par priorite puis par echeance, avec leur statut.
 - Deux types de taches: tache simple et tache urgente (toujours en priorite haute).
 - Persistance automatique dans un fichier JSON.
 - Interface en ligne de commande coloree et interactive.
@@ -68,11 +68,18 @@ dart pub get
 Depuis la racine du projet:
 
 ```bash
+dart run
+```
+
+Il est aussi possible de lancer directement le fichier principal:
+
+```bash
 dart run lib/main.dart
 ```
 
-Le fichier `tasks.json` est cree automatiquement dans le dossier courant au
-premier ajout de tache.
+Les taches sont affichees triees par priorite (la plus haute d'abord), puis par
+echeance. Le fichier `tasks.json` est cree automatiquement dans le dossier
+courant au premier ajout de tache.
 
 ## Lancer les tests
 

@@ -69,5 +69,23 @@ void main() {
         throwsA(isA<InvalidTaskException>()),
       );
     });
+
+    test('getAllTasks trie les taches par priorite decroissante', () async {
+      await service.addTask(
+        SimpleTask(id: '1', title: 'Basse', priority: TaskPriority.low),
+      );
+      await service.addTask(
+        SimpleTask(id: '2', title: 'Haute', priority: TaskPriority.high),
+      );
+      await service.addTask(
+        SimpleTask(id: '3', title: 'Moyenne', priority: TaskPriority.medium),
+      );
+
+      final tasks = service.getAllTasks();
+
+      expect(tasks[0].priority, TaskPriority.high);
+      expect(tasks[1].priority, TaskPriority.medium);
+      expect(tasks[2].priority, TaskPriority.low);
+    });
   });
 }
