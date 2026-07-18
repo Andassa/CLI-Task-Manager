@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../exceptions/invalid_task_exception.dart';
 import '../interfaces/task_storage.dart';
 import '../models/task.dart';
 import '../utils/task_serializer.dart';
+
 class JsonTaskRepository implements TaskStorage {
- 
   final String filePath;
 
   JsonTaskRepository(this.filePath);
@@ -31,10 +32,18 @@ class JsonTaskRepository implements TaskStorage {
       return <Task>[];
     }
 
-    final decoded = jsonDecode(content) as List<dynamic>;
-    return decoded
-        .map((item) => TaskSerializer.fromJson(item as Map<String, dynamic>))
-        .toList();
+    try {
+      final decoded = jsonDecode(content) as List<dynamic>;
+      return decoded
+          .map((item) => TaskSerializer.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } on InvalidTaskException {
+      rethrow;
+    } catch (error) {
+      throw InvalidTaskException(
+        'Le fichier "$filePath" contient des donnees invalides: $error',
+      );
+    }
   }
 
   @override

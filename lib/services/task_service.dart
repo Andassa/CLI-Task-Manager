@@ -4,7 +4,6 @@ import '../interfaces/task_storage.dart';
 import '../models/task.dart';
 import '../repositories/task_repository.dart';
 
-
 class TaskService {
   final TaskRepository _repository;
   final TaskStorage _storage;
@@ -17,7 +16,27 @@ class TaskService {
     final tasks = await _storage.load();
     _repository.replaceAll(tasks);
   }
-  List<Task> getAllTasks() => _repository.getAll();
+
+  List<Task> getAllTasks() {
+    final tasks = List<Task>.from(_repository.getAll());
+    tasks.sort((a, b) {
+      final byPriority = b.priority.index.compareTo(a.priority.index);
+      if (byPriority != 0) {
+        return byPriority;
+      }
+      if (a.deadline == null && b.deadline == null) {
+        return 0;
+      }
+      if (a.deadline == null) {
+        return 1;
+      }
+      if (b.deadline == null) {
+        return -1;
+      }
+      return a.deadline!.compareTo(b.deadline!);
+    });
+    return tasks;
+  }
 
   Future<void> addTask(Task task) async {
     if (task.title.trim().isEmpty) {

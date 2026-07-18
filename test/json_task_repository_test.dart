@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cli_task_manager/exceptions/invalid_task_exception.dart';
 import 'package:cli_task_manager/models/simple_task.dart';
 import 'package:cli_task_manager/models/task_priority.dart';
 import 'package:cli_task_manager/repositories/json_task_repository.dart';
@@ -45,6 +46,17 @@ void main() {
       expect(loaded.first.id, '1');
       expect(loaded.first.title, 'Test');
       expect(loaded.first.priority, TaskPriority.high);
+    });
+
+    test('load leve InvalidTaskException si le fichier est corrompu', () async {
+      await File(filePath).writeAsString('ceci n\'est pas du json valide');
+
+      final repository = JsonTaskRepository(filePath);
+
+      expect(
+        () => repository.load(),
+        throwsA(isA<InvalidTaskException>()),
+      );
     });
 
     test('delete retire la tache du fichier', () async {
