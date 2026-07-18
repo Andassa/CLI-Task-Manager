@@ -2,7 +2,6 @@ import 'task_priority.dart';
 import 'task_status.dart';
 
 abstract class Task {
-
   final String id;
 
   String title;
@@ -46,8 +45,9 @@ abstract class Task {
 
   @override
   String toString() {
-    final deadlineText =
-        deadline != null ? deadline!.toIso8601String() : 'aucune';
+    final deadlineText = deadline != null
+        ? deadline!.toIso8601String()
+        : 'aucune';
     return '[$typeLabel] $id | $title '
         '| priorite: ${priority.name} '
         '| statut: ${status.name} '

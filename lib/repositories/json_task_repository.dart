@@ -39,6 +39,10 @@ class JsonTaskRepository implements TaskStorage {
           .toList();
     } on InvalidTaskException {
       rethrow;
+    } on FormatException catch (error) {
+      throw InvalidTaskException(
+        'Le fichier "$filePath" ne contient pas de JSON valide: ${error.message}',
+      );
     } catch (error) {
       throw InvalidTaskException(
         'Le fichier "$filePath" contient des donnees invalides: $error',

@@ -9,8 +9,7 @@ class TaskService {
   final TaskStorage _storage;
 
   TaskService(this._storage, {TaskRepository? repository})
-      : _repository = repository ?? TaskRepository();
-
+    : _repository = repository ?? TaskRepository();
 
   Future<void> loadTasks() async {
     final tasks = await _storage.load();
@@ -50,6 +49,7 @@ class TaskService {
     _repository.add(task);
     await _persist();
   }
+
   Future<Task> completeTask(String id) async {
     final task = _requireTask(id);
     task.markCompleted();

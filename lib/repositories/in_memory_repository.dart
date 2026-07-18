@@ -10,7 +10,6 @@ class InMemoryRepository<T> implements Repository<T> {
 
   @override
   List<T> getAll() {
-  
     return List<T>.unmodifiable(_items);
   }
 
