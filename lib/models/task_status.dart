@@ -1,5 +1,2 @@
 /// Eetat d'une tache.
-enum TaskStatus {
-  pending,
-  completed,
-}
+enum TaskStatus { pending, completed }
